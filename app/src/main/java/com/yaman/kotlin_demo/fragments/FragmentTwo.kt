@@ -26,6 +26,8 @@ class FragmentTwo : Fragment() {
                 false)
 
 
+        
+
         binding.secondFrag.setOnClickListener {
             findNavController().navigate(R.id.dialogFragment)
         }

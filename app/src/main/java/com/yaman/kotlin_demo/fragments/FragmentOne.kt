@@ -2,6 +2,7 @@ package com.yaman.kotlin_demo.fragments
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -13,9 +14,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 import com.yaman.kotlin_demo.R
 import com.yaman.kotlin_demo.locations.GpsUtils
+import com.yaman.kotlin_demo.locations.LocationService
 import com.yaman.kotlin_demo.locations.OnGpsListener
 
 
@@ -39,9 +42,11 @@ class FragmentOne : Fragment() {
             }
 
         })
-
+        val intent = Intent(context, LocationService::class.java)
+        ContextCompat.startForegroundService(requireContext(), intent);
         return inflater.inflate(R.layout.fragment_one, container, false)
     }
+
 
     private fun startLocationUpdates() {
 
@@ -89,7 +94,7 @@ class FragmentOne : Fragment() {
         }
 
         locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
+            override fun onLocationResult(locationResult: LocationResult) {
                 locationResult ?: return
                 for (location in locationResult.locations) {
                     // Update UI with location data
@@ -158,11 +163,18 @@ class FragmentOne : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         Log.e("FragmentOne", "onDestroyView: ")
+        val intent = Intent(context, LocationService::class.java)
+        context?.startService(intent)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.e("FragmentOne", "onDestroy: ")
+        val intent = Intent(context, LocationService::class.java)
+        context?.startService(intent)
+    }
+
+    fun stopService() {
     }
 
     override fun onDetach() {
